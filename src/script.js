@@ -1,6 +1,11 @@
 // Event listener to load task list after the page loads
 document.addEventListener('DOMContentLoaded', updateUI());
 
+
+function handleTaskInput() {
+    
+};
+
 /**
  * Creates a new task object with a unique ID (using Date.now()), the provided text, completion status set to false, a timestamp and a tags field. It validates the input text and returns null if invalid. 
  * @param {string} taskText - The text content of the task
@@ -74,19 +79,36 @@ function saveTask(taskText) {
  * @returns {object} - html element
  */
 function createTaskElement(taskText) {
-    const taskElement = document.createElement('li');
-    taskElement.textContent = taskText;
+    try {
+        const taskElement = document.createElement('li');
+        taskElement.textContent = taskText;
 
-    const removeButton = document.createElement('button');
-    removeButton.type = 'button';
-    removeButton.textContent = 'X';
-    removeButton.classList.add('btn', 'btn-warning');
-    removeButton.onclick = function() {
-        removeTask(this);
-    };
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.textContent = 'X';
+        removeButton.classList.add('btn', 'btn-warning');
+        removeButton.onclick = function() {
+            removeTask(this);
+        };
 
-    taskElement.appendChild(removeButton);
-    return taskElement;
+        taskElement.appendChild(removeButton);
+        return taskElement;
+    } catch(error) {
+        console.error('Error creating task element: ', error);
+        return null
+    }
 };
 
+/**
+ * Resets the user interface. Receives an array os strings with the tasks, uses createTaskElement() to creat an HTML task object and append it in taskList.
+ * @param {array} taskList 
+ */
+function updateUI(taskList) {
+    const taskListArea = document.getElementById('taskList');
+    taskListArea.textContent = '';
 
+    taskList.forEach(task => {
+        let taskElement = createTaskElement(task.text);
+        taskListArea.appendChild(taskElement);
+    });
+}
