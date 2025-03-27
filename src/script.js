@@ -68,7 +68,25 @@ function saveTask(taskText) {
     };
 };
 
+/**
+ * Creates an html task element with a remove button. Uses bootstrap classes for style. Receives the text as a param and puts the removeTask() function inside the button.
+ * @param {string} taskText 
+ * @returns {object} - html element
+ */
+function createTaskElement(taskText) {
+    const taskElement = document.createElement('li');
+    taskElement.textContent = taskText;
 
-function createTaskElement() {
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.textContent = 'X';
+    removeButton.classList.add('btn', 'btn-warning');
+    removeButton.onclick = function() {
+        removeTask(this);
+    };
 
+    taskElement.appendChild(removeButton);
+    return taskElement;
 };
+
+
