@@ -1,9 +1,24 @@
 // Event listener to load task list after the page loads
 document.addEventListener('DOMContentLoaded', updateUI());
 
-
+/**
+ * Gets input from the user in the taskInput field. Uses saveTask() to create the task element and save it in the storage then call updateUI() to refresh the UI showing the new task
+ * @returns {boolean|false} - returns false if theres is a error
+ */
 function handleTaskInput() {
+    try {
+        const taskText = document.getElementById('taskInput').value;
+        if (!taskText.trim()) {
+            alert("Task input is empty.");
+            return false;
+        };
 
+        saveTask(taskText);
+        updateUI();
+    } catch(error) {
+        console.error('Error handling user input: ', error);
+        return false
+    };
 };
 
 /**
@@ -100,11 +115,11 @@ function createTaskElement(taskText) {
 };
 
 /**
- * Resets the user interface. Receives an array os strings with the tasks, uses createTaskElement() to creat an HTML task object and append it in taskList.
- * @param {array} taskList 
+ * Uses getTasks() to retrieve all tasks and then resets the UI. Uses createTaskElement() to creat an HTML task object and append it in taskList.
  */
-function updateUI(taskList) {
+function updateUI() {
     try {
+        const taskList = getTasks()
         if (taskList && Array.isArray(taskList)) {
             const taskListArea = document.getElementById('taskList');
             taskListArea.textContent = '';
