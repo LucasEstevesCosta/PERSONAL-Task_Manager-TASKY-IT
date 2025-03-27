@@ -67,3 +67,8 @@ function saveTask(taskText) {
         return false;
     };
 };
+
+
+function createTaskElement() {
+
+};
