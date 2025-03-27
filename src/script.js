@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', updateUI());
 
 
 function handleTaskInput() {
-    
+
 };
 
 /**
@@ -11,7 +11,7 @@ function handleTaskInput() {
  * @param {string} taskText - The text content of the task
  * @returns {Object|null} The created task object or null if invalid
  */
-function createTask(taskText){
+function createTask(taskText) {
     if (!taskText || typeof taskText != 'string' || taskText.trim() === '') {
         return null;
     };
@@ -31,7 +31,7 @@ function createTask(taskText){
 function getTasks() {
     try {
         return JSON.parse(localStorage.getItem('tasks')) || [];
-    } catch(error) {
+    } catch (error) {
         console.error('Error getting tasks: ', error)
         return [];
     }
@@ -46,7 +46,7 @@ function storeTasks(tasks) {
     try {
         localStorage.setItem('tasks', JSON.stringify(tasks));
         return true;
-    } catch(error) {
+    } catch (error) {
         console.error('error storing tasks list: ', error);
         return false;
     };
@@ -67,7 +67,7 @@ function saveTask(taskText) {
         let taskList = getTasks();
         taskList.push(newTask);
         return storeTasks(taskList);
-    } catch(error) {
+    } catch (error) {
         console.error('Error saving task: ', error);
         return false;
     };
@@ -87,13 +87,13 @@ function createTaskElement(taskText) {
         removeButton.type = 'button';
         removeButton.textContent = 'X';
         removeButton.classList.add('btn', 'btn-warning');
-        removeButton.onclick = function() {
+        removeButton.onclick = function () {
             removeTask(this);
         };
 
         taskElement.appendChild(removeButton);
         return taskElement;
-    } catch(error) {
+    } catch (error) {
         console.error('Error creating task element: ', error);
         return null
     }
@@ -104,11 +104,18 @@ function createTaskElement(taskText) {
  * @param {array} taskList 
  */
 function updateUI(taskList) {
-    const taskListArea = document.getElementById('taskList');
-    taskListArea.textContent = '';
+    try {
+        if (taskList && Array.isArray(taskList)) {
+            const taskListArea = document.getElementById('taskList');
+            taskListArea.textContent = '';
 
-    taskList.forEach(task => {
-        let taskElement = createTaskElement(task.text);
-        taskListArea.appendChild(taskElement);
-    });
+            taskList.forEach(task => {
+                let taskElement = createTaskElement(task.text);
+                taskListArea.appendChild(taskElement);
+            });
+        };
+    } catch (error) {
+        console.error('Error updating UI: ', error);
+        return false
+    };
 }
