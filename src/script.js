@@ -89,24 +89,69 @@ function saveTask(taskText) {
 };
 
 /**
- * Creates an html task element with a remove button. Uses bootstrap classes for style. Receives the text as a param and puts the removeTask() function inside the button.
- * @param {string} taskText 
+ * Creates an html task element with a remove button. Uses bootstrap classes for style. Receives the text object with all properties and puts the removeTask() function inside the button.
+ * @param {object} task
  * @returns {object} - html element
  */
-function createTaskElement(taskText) {
+function createTaskElement(task) {
     try {
+        // Main task item
         const taskElement = document.createElement('li');
-        taskElement.textContent = taskText;
+        taskElement.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
 
+        // task div for checkbox and text
+        const taskContentDiv = document.createElement('div');
+        taskContentDiv.classList.add('d-flex', 'align-items-center');
+
+        // task text
+        const taskContent = document.createElement('span');
+        taskContent.textContent = task.text;
+
+        // task checkbox
+        const taskCheckbox = document.createElement('input');
+        taskCheckbox.type = 'checkbox';
+        taskCheckbox.classList.add('form-check-input', 'me-2');
+        taskCheckbox.checked = task.completed;
+        taskCheckbox.addEventListener('change', () => toggleTaskStatus(task.id))
+
+        // remove button
         const removeButton = document.createElement('button');
         removeButton.type = 'button';
-        removeButton.textContent = 'X';
-        removeButton.classList.add('btn', 'btn-warning');
+        //icon
+        const removeIcon = document.createElement('i');
+        removeIcon.classList.add('fa-solid', 'fa-trash');
+        removeButton.appendChild(removeIcon);
+
+        removeButton.classList.add('btn', 'btn-warning', 'ms-1');
         removeButton.onclick = function () {
-            removeTask(this);
+            removeTask(task.id);
         };
 
-        taskElement.appendChild(removeButton);
+        // update button
+        const updateButton = document.createElement('button');
+        updateButton.type = 'button';
+        // icon
+        const updateIcon = document.createElement('i');
+        updateIcon.classList.add('fa-solid', 'fa-pencil');
+        updateButton.appendChild(updateIcon);
+        
+        updateButton.classList.add('btn', 'btn-secondary', 'me-1', 'ms-1');
+        updateButton.onclick = function () {
+            updatedTask(task.id);
+        };
+
+        // buttons div
+        const buttonsDiv = document.createElement('div');
+        buttonsDiv.classList.add('d-flex');
+        buttonsDiv.appendChild(updateButton);
+        buttonsDiv.appendChild(removeButton);
+
+        // adding the components to the main task item
+        taskContentDiv.appendChild(taskCheckbox);
+        taskContentDiv.appendChild(taskContent)
+        taskElement.appendChild(taskContentDiv);
+        taskElement.appendChild(buttonsDiv);
+        
         return taskElement;
     } catch (error) {
         console.error('Error creating task element: ', error);
@@ -125,7 +170,7 @@ function updateUI() {
             taskListArea.textContent = '';
 
             taskList.forEach(task => {
-                let taskElement = createTaskElement(task.text);
+                let taskElement = createTaskElement(task);
                 taskListArea.appendChild(taskElement);
             });
         };
@@ -133,4 +178,31 @@ function updateUI() {
         console.error('Error updating UI: ', error);
         return false
     };
-}
+};
+
+/**
+ * Gets the id from the task to remove from the createTaskElement() whe the task HTML element is created. USes getTasks() to retrieve all tasks, finds the index of the desired task and removes it using splice. Then it calls updateUI().
+ * @param {*} idToRemove 
+ */
+function removeTask(idToRemove) {
+    try {
+        const taskList = getTasks();
+        const taskIndex = taskList.findIndex((task) => task.id === idToRemove);
+        taskList.splice(taskIndex, 1);
+        storeTasks(taskList);
+        updateUI()
+        return true;
+    } catch(error) {
+        console.error('Error removing task: ', error);
+        return false;
+    };
+};
+
+function toggleTaskStatus(taskId) {
+    return;
+};
+
+
+function updatedTask(taskId) {
+    return;
+};
