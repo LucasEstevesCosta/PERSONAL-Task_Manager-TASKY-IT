@@ -18,17 +18,28 @@
                 <div class="card shadow">
                     <div class="card-body">
                         <h1 class="text-center mb-4">Minha Lista de Tarefas</h1>
+
                         <!-- pending tasks counter -->
                         <p class="text-center mb-3">
                             Tarefas pendentes: <span id="pendingTasksCount" class="badge bg-warning">0</span>
                         </p>
+
+                        <!-- input form to create new task -->
                         <div class="input-group mb-3">
                             <input type="text" id="taskInput" class="form-control" placeholder="Digite sua tarefa...">
                             <button class="btn btn-primary" onclick="handleTaskInput()">Adicionar</button>
                         </div>
+
                         <ul id="taskList" class="list-group">
                             <!-- tasks will be dinamically added here -->
                         </ul>
+
+                        <div id="taskDetails" class="detailsModal">
+                            <!-- details of the task will show here on a modal -->
+                                <div id="detailsModalContent">
+                                    <!-- contents of the task will show here to change -->
+                                </div>
+                        </div>
                     </div>
                 </div>
             </div>
